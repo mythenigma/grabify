@@ -8,7 +8,7 @@ export default {
       }
   
       try {
-        const apiUrl = \`\${env.API_URL}?code=\${encodeURIComponent(code)}\`;
+        const apiUrl = env.API_URL + "?code=" + encodeURIComponent(code);
         const res = await fetch(apiUrl);
         const data = await res.json();
   
