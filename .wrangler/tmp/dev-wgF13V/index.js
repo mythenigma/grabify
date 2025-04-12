@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// .wrangler/tmp/bundle-qLOxmX/checked-fetch.js
+// .wrangler/tmp/bundle-6GPbxa/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -35,13 +35,17 @@ var src_default = {
     if (!code) {
       return new Response("Missing code", { status: 400 });
     }
+    const userIP = request.headers.get("cf-connecting-ip") || "0.0.0.0";
+    const userAgent = request.headers.get("user-agent") || "Unknown-UA";
+    const browserTime = (/* @__PURE__ */ new Date()).toString();
+    const apiUrl = "https://grabify.icu/directto.php?typeA=" + encodeURIComponent(code) + "&time=" + encodeURIComponent(browserTime);
     try {
-      const apiUrl = "https://grabify.icu/directto.php?typeA=" + encodeURIComponent(code);
       const response = await fetch(apiUrl, {
+        method: "GET",
         headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+          "User-Agent": userAgent,
           "Accept": "application/json,text/html",
-          "Referer": "https://google.com"
+          "X-Real-IP": userIP
         }
       });
       if (!response.ok) {
@@ -100,7 +104,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-qLOxmX/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-6GPbxa/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -132,7 +136,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-qLOxmX/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-6GPbxa/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
