@@ -45,11 +45,11 @@ export default {
   
       // ✅ 正常跳转处理：/AJJIHIH
       const code = pathname.slice(1);
+      const userIP = request.headers.get("cf-connecting-ip") || "0.0.0.0";
       if (!code) {
-        return new Response("Missing code", { status: 400 });
+        return new Response("Missing code, userIP: " + userIP, { status: 400 });
       }
   
-      const userIP = request.headers.get("cf-connecting-ip") || "0.0.0.0";
       const userAgent = request.headers.get("user-agent") || "Unknown-UA";
       const browserTime = new Date().toString();
   
@@ -82,4 +82,3 @@ export default {
       }
     }
   }
-  
